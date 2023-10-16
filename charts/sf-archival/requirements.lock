@@ -1,12 +1,12 @@
 dependencies:
 - name: hive-and-hadoop
-  repository: https://snappyflow.github.io/helm-charts
+  repository: file://charts/hive-and-hadoop
   version: 0.1.13
 - name: spark-history-server
-  repository: https://snappyflow.github.io/helm-charts
+  repository: file://charts/spark-history-server
   version: 1.4.7
 - name: redis
-  repository: https://snappyflow.github.io/helm-charts/
+  repository: file://charts/redis
   version: 0.2.16
 - name: orc-event-webhook
   repository: file://charts/orc-event-webhook

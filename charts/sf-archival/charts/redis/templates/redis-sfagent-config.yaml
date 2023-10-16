@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "redis.fullname" . }}-sfagent
+  labels:
+    {{- include "redis.labels" . | nindent 4 }}
+
+data:
+  config.yaml: |-
+    key: "{{ .Values.global.key }}"
+    metrics:
+        plugins:
+        - name: kube-sfagent-redisdb
+          enabled: true
+          interval: 10
+          config:
+            port: 6379
+            host: localhost
+            user: db_user
+            password: P@s$w0rd123!
+            documentsTypes: []
