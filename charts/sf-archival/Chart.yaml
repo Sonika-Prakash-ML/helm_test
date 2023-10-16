@@ -3,7 +3,7 @@ appVersion: '1.0'
 dependencies:
 - condition: global.hive.internal.enabled
   name: hive-and-hadoop
-  repository: file://charts/hive-and-hadoop
+  repository: file://charts/sf-hive-and-hadoop
   version: 0.1.13
 - condition: spark-history-server.enabled
   name: spark-history-server

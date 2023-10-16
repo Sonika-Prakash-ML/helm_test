@@ -1,6 +1,6 @@
 dependencies:
 - name: hive-and-hadoop
-  repository: file://charts/hive-and-hadoop
+  repository: file://charts/sf-hive-and-hadoop
   version: 0.1.13
 - name: spark-history-server
   repository: file://charts/spark-history-server
