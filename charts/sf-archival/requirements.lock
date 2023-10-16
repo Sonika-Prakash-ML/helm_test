@@ -14,5 +14,5 @@ dependencies:
 - name: orc-event-retry-job
   repository: file://charts/orc-event-retry-job
   version: 0.1.0
-digest: sha256:08694073f23ebb0e598d49a2a6f395a4080d581b3454016173930b6751dbd685
-generated: "2023-09-11T15:54:28.8577479+05:30"
+digest: sha256:5dbe13b792f5d9fcc8a70f011bab19c465b690aec4002f65da1fe977abf6601f
+generated: "2023-10-16T17:52:39.2214113+05:30"
