@@ -1,0 +1,30 @@
+affinity: {}
+containerResources:
+  logarchival:
+    limits:
+      cpu: 50m
+      memory: 50Mi
+    requests:
+      cpu: 10m
+      memory: 10Mi
+dataset-controller:
+  service:
+    servicePort: 5001
+db:
+  max_idle_connections: 0
+  max_open_connections: 1
+fullnameOverride: ''
+image:
+  pullPolicy: IfNotPresent
+  repository: snappyflowml/log-archival
+  tag: '2-0-105'
+ingest-controller:
+  service:
+    servicePort: 5000
+nameOverride: ''
+nodeSelector: {}
+schedulerName: sf-scheduler
+serverPort: :5003
+service:
+  servicePort: 5003
+tolerations: []

@@ -1,0 +1,54 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ template "dataset-raw-controller.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+data:
+  config.json: |-
+    {
+      "db": {
+        "name": "{{ .Values.global.postgresql.postgresqlDatabase }}",
+        "user": "{{ .Values.global.postgresql.postgresqlUsername }}",
+        "password": "{{ .Values.global.postgresql.postgresqlPassword }}",
+        "host": "{{ template "dataset-raw-controller.postgresql.fullname" . }}",
+        "port": {{ .Values.global.postgresql.servicePort }},
+        "max_open_connections": {{ .Values.db.max_open_connections }},
+        "max_idle_connections": {{ .Values.db.max_idle_connections }}
+      },
+      "serverPort": "{{ .Values.serverPort }}",
+      "final_segment_size_gb": {{ .Values.appParams.segmentSizeGB }},
+      "final_segment_size_buffer_pcnt": {{ .Values.appParams.segmentSizeBufferPCNT }},
+      "num_orcs_in_segment": {{ .Values.appParams.numORCInSegment }},
+      "num_backtrack_days": {{ .Values.appParams.numBacktrackDaysToDetect }},
+      "ingest_controller_url": "http://{{ template "dataset-raw-controller.ingest-controller.fullname" . }}",
+      "dataset_controller_url": "http://{{ template "dataset-raw-controller.dataset-controller.fullname" . }}",
+      "bucket_partition_duration_mins": {{ .Values.global.timeBucketSizeMinutes }},
+      "event_queue_handler_monitor_interval_in_sec": {{ .Values.appParams.eventQueueHandlerMonitorIntervalInSec }},
+      "orc_inventory_batch_fetch_size": {{ .Values.appParams.orcInventoryBatchFetchSize}},
+      "max_buffered_events": {{ .Values.appParams.maxBufferedEvents}},
+      "competingConsumers": {{ .Values.appParams.competingConsumers}}
+    }
+
+---
+
+{{- if .Values.global.secrets.minio.enable }}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ template "orc-event-controller.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+data:
+  config.json: |-
+    {
+      "serverPort": "{{ .Values.orcEventController.serverPort }}",
+      "kafkaBrokers": "{{ .Values.orcEventController.kafkaBrokers }}",
+      "redisServer": "{{ .Values.orcEventController.redisServer }}",
+      "consumerGroup": "{{ .Values.orcEventController.consumerGroup }}",
+      "producerClient": "{{ .Values.orcEventController.producerClient }}",
+      "kafkaTopic" : "{{ .Values.orcEventController.kafkaTopic }}",
+      "redisHash": "{{ .Values.orcEventController.redisHash }}",
+      "redisSortedSet": "{{ .Values.orcEventController.redisSortedSet }}",
+      "kafkaConsumedMsgsCount": {{ .Values.orcEventController.kafkaConsumedMsgsCount }},
+      "kafkaConsumeTimeout": {{ .Values.orcEventController.kafkaConsumeTimeout }}
+    }
+{{- end }}

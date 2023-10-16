@@ -1,0 +1,31 @@
+affinity: {}
+fullnameOverride: ''
+image:
+  pullPolicy: IfNotPresent
+  repository: snappyflowml/raw-query-exec-controller
+  tag: '2-0-105'
+imagePullSecrets: []
+maxGBToProcessDuringHistogramQuery: 1
+maxGBToProcessDuringLogQuery: 1
+nameOverride: ''
+nodeSelector: {}
+podAnnotations: {}
+podSecurityContext: {}
+presto:
+  catalog: hive
+  schema: default
+  user: maplelabs
+replicaCount: 1
+resources:
+  limits:
+    cpu: 100m
+    memory: 256Mi
+  requests:
+    cpu: 50m
+    memory: 256Mi
+schedulerName: sf-scheduler
+securityContext: {}
+service:
+  port: 80
+  type: ClusterIP
+tolerations: []

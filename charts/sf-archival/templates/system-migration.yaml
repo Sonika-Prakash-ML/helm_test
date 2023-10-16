@@ -1,0 +1,77 @@
+{{- if .Values.hooks.systemMigration.enable }}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-system-migration-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+data:
+  config.json: |-
+    {
+      "db": {
+        "name": "{{ .Values.global.postgresql.postgresqlDatabase }}",
+        "user": "{{ .Values.global.postgresql.postgresqlUsername }}",
+        "password": "{{ .Values.global.postgresql.postgresqlPassword }}",
+        "host": "{{ template "ingest-controller.postgresql.fullname" . }}",
+        "port": {{ .Values.global.postgresql.servicePort }}
+      },
+      "hive": {
+        "userName": "{{ template "ingest-controller.hive-server.username" . }}",
+        "host": "{{ template "ingest-controller.hive-server.host" . }}",
+        "port": {{ template "ingest-controller.hive-server.port" . }},
+        "auth": "{{ template "ingest-controller.hive-server.auth" . }}"
+      },
+      "compactPartitionColumnNames": {{ .Values.global.hivepartitioncolumns.compactPartitionColumnNames }},
+      "rawPartitionColumnNames": {{ .Values.global.hivepartitioncolumns.rawPartitionColumnNames }},
+      "datasetRawControllerURL": "http://{{ template "ingest-controller.dataset-raw-controller.fullname" . }}"
+    }
+{{- end }}
+---
+{{- if .Values.hooks.systemMigration.enable }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-system-migration
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    "helm.sh/hook": post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    metadata:
+      name: {{ .Release.Name }}-system-migraton
+      labels:
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        release: {{ .Release.Name }}
+        {{ .Values.global.snappyflowProjectLabel}}: {{ .Values.global.snappyflowProjectName }}
+        {{ .Values.global.snappyflowAppLabel }}: {{ .Values.global.snappyflowAppName }}
+    spec:
+      restartPolicy: Never
+{{- if or (and .Values.global.secrets.aws.enable .Values.global.secrets.aws.use_iam_role) .Values.global.secrets.gcs.enable }}
+      serviceAccountName: {{ .Release.Name }}-service-account
+{{- end}}
+      containers:
+      - name: main
+        image: "{{ .Values.hooks.systemMigration.image.repository }}:{{ .Values.hooks.systemMigration.image.tag }}"
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: {{ .Release.Name }}-system-migration-config
+            mountPath: "/etc/conf"
+            readOnly: true
+        envFrom:
+          - configMapRef:
+              name: {{ .Release.Name }}-cloud-env
+      volumes:
+        - name: {{ .Release.Name }}-system-migration-config
+          configMap:
+            name: {{ .Release.Name }}-system-migration-config
+{{- end }}

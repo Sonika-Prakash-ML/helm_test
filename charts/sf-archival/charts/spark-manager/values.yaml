@@ -1,0 +1,44 @@
+affinity: {}
+cbsparkevent:
+  image:
+    pullPolicy: IfNotPresent
+    repository: snappyflowml/cb-spark-event
+    tag: '2-0-105'
+compactionImage: snappyflowml/spark-compact-orc:2
+fullnameOverride: ''
+jobserver:
+  containerResources:
+    limits:
+      cpu: 200m
+      memory: 512Mi
+    requests:
+      cpu: 10m
+      memory: 50Mi
+  db:
+    max_idle_connections: 0
+    max_open_connections: 1
+  image:
+    pullPolicy: IfNotPresent
+    repository: snappyflowml/job-server
+    tag: '2-0-105'
+  serverPort: 5002
+  service:
+    servicePort: 5002
+  sparkProperties:
+    logDirectory: sparkhs/spark-hs
+monitor:
+  containerResources:
+    limits:
+      cpu: 100m
+      memory: 256Mi
+    requests:
+      cpu: 10m
+      memory: 10Mi
+  image:
+    pullPolicy: IfNotPresent
+    repository: snappyflowml/monitor
+    tag: '2-0-105'
+nameOverride: ''
+nodeSelector: {}
+schedulerName: sf-scheduler
+tolerations: []

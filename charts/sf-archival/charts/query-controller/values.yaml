@@ -1,0 +1,79 @@
+affinity: {}
+cleanIntervalInHour: 1
+cleanup:
+  pullPolicy: IfNotPresent
+  repository: snappyflowml/query-cleanup
+  tag: '2-0-105'
+containerResources:
+  querycleanup:
+    limits:
+      cpu: 50m
+      memory: 50Mi
+    requests:
+      cpu: 10m
+      memory: 10Mi
+  querycontroller:
+    limits:
+      cpu: 100m
+      memory: 512Mi
+    requests:
+      cpu: 50m
+      memory: 512Mi
+  queryexecutioncontroller:
+    limits:
+      cpu: 100m
+      memory: 512Mi
+    requests:
+      cpu: 50m
+      memory: 512Mi
+dataset-controller:
+  service:
+    servicePort: 5001
+db:
+  querycontroller:
+    max_idle_connections: 0
+    max_open_connections: 1
+  queryexecutioncontroller:
+    max_idle_connections: 1
+    max_open_connections: 2
+executionControler:
+  pullPolicy: IfNotPresent
+  repository: snappyflowml/query-execution-controller
+  tag: '2-0-105'
+external:
+  enabled: false
+  externalTrafficPolicy: Cluster
+  type: NodePort
+fullnameOverride: ''
+image:
+  pullPolicy: IfNotPresent
+  repository: snappyflowml/query-controller
+  tag: '2-0-105'
+ingest-controller:
+  service:
+    servicePort: 5000
+kafka:
+  schemaRegistry:
+    host: 10.10.10.10
+    port: 8081
+log-archival:
+  service:
+    servicePort: 5003
+maxGBToProcessDuringSplitQuery: 1
+monitorInterval: 1
+monitorIntervalUnit: s
+nameOverride: ''
+nodeSelector: {}
+presto:
+  catalog: hive
+  schema: default
+  user: maplelabs
+schedulerName: sf-scheduler
+serverPort: :5004
+service:
+  servicePort: 5004
+spark-manager:
+  jobserver:
+    service:
+      servicePort: 5002
+tolerations: []

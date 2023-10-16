@@ -1,0 +1,72 @@
+affinity: {}
+appParams:
+  competingConsumers: 2
+  eventQueueHandlerMonitorIntervalInSec: 2
+  maxBufferedEvents: 60000
+  numBacktrackDaysToDetect: 5
+  numORCInSegment: 4
+  orcInventoryBatchFetchSize: 20000
+  segmentSizeBufferPCNT: 15
+  segmentSizeGB: 1.0
+autoscaling:
+  enabled: true
+  eventQueueHandlerOccupancyPercentage: 80
+  maxReplicas: 5
+  minReplicas: 1
+  scaleDownPeriod: 60
+  scaleUpPeriod: 30
+containerResources:
+  limits:
+    cpu: 250m
+    memory: 512Mi
+  requests:
+    cpu: 50m
+    memory: 512Mi
+db:
+  max_idle_connections: 1
+  max_open_connections: 3
+fullnameOverride: ''
+image:
+  pullPolicy: IfNotPresent
+  repository: snappyflowml/dataset-raw-controller
+  tag: '2-0-105'
+nameOverride: ''
+nodeSelector: {}
+podAnnotations:
+  prometheus.io/path: /metrics
+  prometheus.io/port: '9000'
+  prometheus.io/scrape: 'true'
+podSecurityContext: {}
+replicaCount: 1
+schedules:
+  detect_raw_time_buckets: 0 * * * *
+  process_raw_data: 0 1 * * *
+  raw_version_compacted: 0 5 * * *
+securityContext: {}
+serverPort: :5002
+service:
+  servicePort: 5002
+tolerations: []
+orcEventController:
+  image:
+    pullPolicy: IfNotPresent
+    repository: snappyflowml/orc-event-controller
+    tag: '2-0-105'
+  containerResources:
+    limits:
+      cpu: 250m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+  urlPath: 'localhost:18080/orc-event-controller/v1/orcevents'
+  serverPort: ":18080"
+  kafkaBrokers: "localhost:9092"
+  redisServer: "localhost:6379"
+  consumerGroup: "my-consumer"
+  producerClient: "my-producer"
+  kafkaTopic: "my-topic"
+  redisHash: "orcHash"
+  redisSortedSet: "orcSortedSet"
+  kafkaConsumedMsgsCount: 100
+  kafkaConsumeTimeout: 2
