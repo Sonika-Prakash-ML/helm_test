@@ -3,6 +3,36 @@ entries:
   sf-archival:
   - apiVersion: v2
     appVersion: "1.0"
+    created: "2023-10-17T06:15:45.07697035Z"
+    dependencies:
+    - condition: global.hive.internal.enabled
+      name: hive-and-hadoop
+      repository: file://charts/sf-hive-and-hadoop
+      version: 0.1.13
+    - condition: spark-history-server.enabled
+      name: spark-history-server
+      repository: file://charts/spark-history-server
+      version: 1.4.7
+    - condition: global.secrets.minio.enable
+      name: redis
+      repository: file://charts/redis
+      version: 0.2.16
+    - condition: global.secrets.minio.enable
+      name: orc-event-webhook
+      repository: file://charts/orc-event-webhook
+      version: 0.1.0
+    - condition: global.secrets.minio.enable
+      name: orc-event-retry-job
+      repository: file://charts/orc-event-retry-job
+      version: 0.1.0
+    description: A Helm chart for Kubernetes
+    digest: 4df6d3c0b64c3c5589ec67da2677560724bf43b2e117df2f93ff4a1c064e335b
+    name: sf-archival
+    urls:
+    - https://github.com/Sonika-Prakash-ML/helm_test/releases/download/sf-archival-2.0.109/sf-archival-2.0.109.tgz
+    version: 2.0.109
+  - apiVersion: v2
+    appVersion: "1.0"
     created: "2023-10-17T04:43:32.82570994Z"
     dependencies:
     - condition: global.hive.internal.enabled
